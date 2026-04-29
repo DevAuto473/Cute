@@ -1,408 +1,101 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>انا كيوت ادخلني UwU</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بيئة آمنة جداً UwU</title>
     <style>
-        /* التنسيقات العامة */
-        body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #ffffff;
-            transition: background-color 0.1s;
-        }
-
-        /* ---------------- المرحلة 1: واجهة الخداع البريئة ---------------- */
+        body, html { margin: 0; padding: 0; overflow: hidden; background: #000; }
         #phase1 {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: linear-gradient(135deg, #fff0f5 0%, #ffe4e1 100%);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-            color: #d14781;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #ffe4e1; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; z-index: 100;
         }
-
-        #phase1 h1 {
-            font-size: 3rem;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(209, 71, 129, 0.2);
-            text-align: center;
-        }
-
-        .emojis {
-            font-size: 4rem;
-            margin-bottom: 40px;
-            letter-spacing: 15px;
-        }
-
         #start-btn {
-            background-color: #ff6b9e;
-            color: white;
-            border: none;
-            border-radius: 50px;
-            padding: 20px 50px;
-            font-size: 1.8rem;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 8px 20px rgba(255, 107, 158, 0.4);
-            transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
+            padding: 20px 40px; font-size: 24px; background: #ff6b9e;
+            color: white; border: none; border-radius: 50px; cursor: pointer;
         }
-
-        #start-btn:hover {
-            background-color: #ff4785;
-            transform: scale(1.05);
-            box-shadow: 0 10px 25px rgba(255, 107, 158, 0.6);
-        }
-
-        #start-btn:active {
-            transform: scale(0.95);
-        }
-
-        /* ---------------- المرحلة 2: الجحيم المرعب (متوافق مع iOS) ---------------- */
-        #canvas-container {
-            display: none;
-            width: 100vw;
-            height: 100vh;
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 1;
-        }
-
-        /* لوحة المقاييس الحية - أعلى اليسار */
-        #metrics-panel {
-            display: none;
-            position: fixed;
-            top: 15px;
-            left: 15px;
-            background-color: rgba(10, 0, 0, 0.9);
-            border: 1px solid #ff0000;
-            padding: 15px;
-            border-radius: 8px;
-            z-index: 10;
-            pointer-events: none;
-            box-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
-            min-width: 150px;
-            text-align: left;
-            direction: ltr;
-        }
-
-        .metric-title {
-            font-size: 12px;
-            color: #ff5555;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 5px;
-        }
-
-        .metric-value {
-            font-size: 24px;
-            font-weight: bold;
-            color: #ff0000;
-            margin-bottom: 15px;
-            text-shadow: 0 0 10px #ff0000;
-        }
-
-        .metric-value:last-child {
-            margin-bottom: 0;
-        }
-
-        /* زر الإيقاف الثابت - أعلى اليمين (نابض ومرعب) */
-        @keyframes throb {
-            0% { transform: scale(1); box-shadow: 0 0 15px rgba(255, 0, 0, 0.8); background-color: #880000; }
-            50% { transform: scale(1.15); box-shadow: 0 0 50px rgba(255, 0, 0, 1); background-color: #ff0000; }
-            100% { transform: scale(1); box-shadow: 0 0 15px rgba(255, 0, 0, 0.8); background-color: #880000; }
-        }
-
         #stop-btn {
-            display: none;
-            position: fixed;
-            top: 15px;
-            right: 15px;
-            color: white;
-            border: 3px solid #ff0000;
-            padding: 15px 35px;
-            font-size: 22px;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            z-index: 100;
-            animation: throb 0.4s infinite alternate cubic-bezier(0.68, -0.55, 0.27, 1.55);
-            text-transform: uppercase;
-            text-shadow: 0 0 5px #000;
+            position: fixed; top: 10px; right: 10px; padding: 10px;
+            background: red; color: white; z-index: 200; display: none;
+            border: none; border-radius: 5px; animation: pulse 0.5s infinite;
         }
-
-        #stop-btn:active {
-            transform: scale(0.9);
-        }
-
-        /* شاشة النهاية */
-        #end-screen {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: #000;
-            z-index: 200;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            color: #fff;
-        }
-
-        #end-screen h1 {
-            color: #00ff00;
-            text-shadow: 0 0 20px #00ff00;
-        }
+        @keyframes pulse { 0% { opacity: 1; } 100% { opacity: 0.5; } }
     </style>
-
-    <!-- استيراد مكتبة Three.js -->
-    <script type="importmap">
-        {
-            "imports": {
-                "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
-            }
-        }
-    </script>
 </head>
-
 <body>
 
-    <!-- المرحلة 1: الواجهة البريئة -->
-    <div id="phase1">
-        <div class="emojis">🌸✨🧸🎀</div>
-        <h1>أهلاً بك في بيئتنا الآمنة جداً</h1>
-        <button id="start-btn">بدء التجربة</button>
-    </div>
+<div id="phase1">
+    <h1 style="color: #d14781;">🌸 أهلاً بك في المكان اللطيف 🌸</h1>
+    <button id="start-btn">بدء التجربة</button>
+</div>
 
-    <!-- المرحلة 2: عناصر الكابوس -->
-    <div id="canvas-container"></div>
-    <div id="metrics-panel">
-        <div class="metric-title">FPS</div>
-        <div class="metric-value" id="fps-val">60</div>
-        <div class="metric-title">Objects</div>
-        <div class="metric-value" id="objects-val">0</div>
-    </div>
-    <button id="stop-btn">STOP TEST</button>
+<button id="stop-btn" onclick="location.reload()">STOP (RELOAD)</button>
+<canvas id="canvas"></canvas>
 
-    <div id="end-screen">
-        <h1>تم إنقاذ الجهاز بنجاح!</h1>
-        <p>تم تحرير الذاكرة وتفريغ سياق WebGL بالكامل.</p>
-    </div>
+<script type="module">
+    import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
 
-    <script type="module">
-        import * as THREE from 'three';
+    const btn = document.getElementById('start-btn');
+    btn.onclick = () => {
+        document.getElementById('phase1').style.display = 'none';
+        document.getElementById('stop-btn').style.display = 'block';
+        startStress();
+    };
 
-        // المتغيرات
-        let scene, camera, renderer;
-        let animationId;
-        const objects = [];
-        const geometries = [];
+    function startStress() {
+        const scene = new THREE.Scene();
+        const camera = new THREE.Camera();
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas'), antialias: false });
+        renderer.setPixelRatio(1); // الحفاظ على الثبات
+        renderer.setSize(window.innerWidth, window.innerHeight);
 
-        let lastTime = performance.now();
-        let frames = 0;
-        const fpsElement = document.getElementById('fps-val');
-        const objectsElement = document.getElementById('objects-val');
-
-        let isStopped = false;
-
-        document.getElementById('start-btn').addEventListener('click', triggerHorrorPhase);
-        document.getElementById('stop-btn').addEventListener('click', stopTest);
-
-        function triggerHorrorPhase() {
-            // تدمير الواجهة اللطيفة
-            document.getElementById('phase1').style.display = 'none';
-            document.body.style.backgroundColor = '#000';
-
-            // إظهار واجهات الإجهاد
-            document.getElementById('canvas-container').style.display = 'block';
-            document.getElementById('metrics-panel').style.display = 'block';
-            document.getElementById('stop-btn').style.display = 'block';
-
-            // بدء التهيئة المتوافقة مع iOS
-            initSurvivableWebGL();
-        }
-
-        function initSurvivableWebGL() {
-            const container = document.getElementById('canvas-container');
-
-            scene = new THREE.Scene();
-            scene.fog = new THREE.FogExp2(0x0a0000, 0.05); // ضباب مرعب خفيف
-
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.z = 30;
-
-            // استخدام إعدادات عادية لمنع iOS من إغلاق التبويبة
-            renderer = new THREE.WebGLRenderer({ antialias: false, powerPreference: "default" });
-            
-            // قيد حاسم جداً لـ iOS: دقة شاشة أساسية بدون مضاعفات لتجنب الانهيار (Crash)
-            renderer.setPixelRatio(1);
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            container.appendChild(renderer.domElement);
-
-            // إنشاء الأجسام المشوهة
-            createCreepyGeometries();
-
-            window.addEventListener('resize', onWindowResize);
-            animate();
-        }
-
-        // إنشاء المجسمات المرعبة بعدد قليل جداً لتجنب استنفاد الذاكرة
-        function createCreepyGeometries() {
-            const numObjects = 80; // عدد قليل كافٍ جداً
-            objectsElement.textContent = numObjects;
-
-            // استخدام مواد أساسية رخيصة حسابياً ولكنها تبدو مزعجة
-            const matRed = new THREE.MeshBasicMaterial({ color: 0xaa0000 });
-            const matWire = new THREE.MeshBasicMaterial({ color: 0x000000, wireframe: true, wireframeLinewidth: 2 });
-
-            for (let i = 0; i < numObjects; i++) {
-                // إنشاء هندسة مستقلة لكل جسم لتشويهها من المعالج المركزي (CPU)
-                const geo = new THREE.IcosahedronGeometry(2, 0); // تفاصيل منخفضة جداً
-                
-                // حفظ المواضع الأصلية للرؤوس للرجوع إليها عند التشويه
-                const posAttr = geo.attributes.position;
-                const origPositions = new Float32Array(posAttr.array);
-                geo.userData = { origPositions: origPositions };
-                
-                geometries.push(geo);
-
-                const mesh = new THREE.Mesh(geo, Math.random() > 0.5 ? matRed : matWire);
-                
-                // توزيع عشوائي
-                mesh.position.set(
-                    (Math.random() - 0.5) * 50,
-                    (Math.random() - 0.5) * 50,
-                    (Math.random() - 0.5) * 20
-                );
-
-                mesh.rotation.set(
-                    Math.random() * Math.PI,
-                    Math.random() * Math.PI,
-                    Math.random() * Math.PI
-                );
-
-                const scale = Math.random() * 2 + 1;
-                mesh.scale.set(scale, scale, scale);
-
-                scene.add(mesh);
-                objects.push(mesh);
-            }
-        }
-
-        // حلقة الجحيم
-        function animate() {
-            if (isStopped) return;
-
-            animationId = requestAnimationFrame(animate);
-
-            // ---------------------------------------------------------
-            // خنق المعالج المعتمد على الوقت (Time-Based Throttling)
-            // هذه هي الاستراتيجية الناجحة لنظام iOS لضمان بطء الشاشة
-            // مع منع المتصفح من الاعتقاد بأن الصفحة قد تجمدت تماماً
-            // ---------------------------------------------------------
-            const frameStart = performance.now();
-            let garbageVal = 0;
-            // احتجاز المعالج لمدة 150 ملي ثانية في كل إطار (سيؤدي ذلك لتثبيت الإطارات بين 3 إلى 6 FPS)
-            while (performance.now() - frameStart < 150) {
-                garbageVal += Math.random(); // عملية حسابية خفيفة فقط لإشغال المعالج
-            }
-
-            const time = performance.now() * 0.001;
-
-            // تشويه رؤوس المجسمات في كل إطار (Glitchy Spikes effect)
-            for (let i = 0; i < objects.length; i++) {
-                const obj = objects[i];
-                obj.rotation.x += 0.05;
-                obj.rotation.y += 0.05;
-
-                const geo = obj.geometry;
-                const posAttr = geo.attributes.position;
-                const orig = geo.userData.origPositions;
-
-                // تحريك عشوائي حاد لكل رأس في المجسم
-                for (let j = 0; j < posAttr.count; j++) {
-                    const twitchX = (Math.random() - 0.5) * 1.8;
-                    const twitchY = (Math.random() - 0.5) * 1.8;
-                    const twitchZ = (Math.random() - 0.5) * 1.8;
-                    
-                    posAttr.setXYZ(
-                        j,
-                        orig[j * 3] + twitchX,
-                        orig[j * 3 + 1] + twitchY,
-                        orig[j * 3 + 2] + twitchZ
-                    );
+        // هذا الـ Shader هو "قاتل الأداء" الحقيقي
+        // يقوم بحساب معادلات Mandelbulb بشكل متكرر لكل بكسل
+        const geometry = new THREE.PlaneGeometry(2, 2);
+        const material = new THREE.ShaderMaterial({
+            uniforms: { iTime: { value: 0 }, iResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) } },
+            vertexShader: `void main() { gl_Position = vec4(position, 1.0); }`,
+            fragmentShader: `
+                uniform float iTime;
+                uniform vec2 iResolution;
+                void main() {
+                    vec2 uv = (gl_FragCoord.xy - 0.5 * iResolution.xy) / iResolution.y;
+                    vec3 col = vec3(0.0);
+                    vec3 ro = vec3(0.0, 0.0, 2.0);
+                    vec3 rd = normalize(vec3(uv, -1.0));
+                    float t = 0.0;
+                    // حلقة تكرارية ثقيلة جداً (Raymarching)
+                    // زيادة هذا الرقم سيجعل التعليق أقوى
+                    for(int i=0; i<160; i++) {
+                        vec3 p = ro + rd * t;
+                        // معادلة تظليل معقدة ترهق الـ GPU
+                        float d = length(p) - 0.5 + Math.sin(p.x*10.0 + iTime)*0.1;
+                        d = min(d, length(p+vec3(sin(iTime), cos(iTime), 0.0)) - 0.2);
+                        // إضافة طبقات حسابية لا يمكن اختصارها
+                        for(int j=0; j<5; j++) {
+                            p = abs(p) / dot(p,p) - 0.5;
+                        }
+                        d = min(d, length(p) - 0.02);
+                        if(d < 0.001 || t > 10.0) break;
+                        t += d * 0.5;
+                    }
+                    col = vec3(t * 0.1, 0.0, 0.0); // لون أحمر مرعب
+                    gl_FragColor = vec4(col, 1.0);
                 }
-                posAttr.needsUpdate = true; // إخبار Three.js بتحديث الرؤوس في الـ GPU
-            }
+            `
+        });
 
-            // حركة كاميرا غير مريحة
-            camera.position.x = Math.sin(time) * 15;
-            camera.position.y = Math.cos(time * 0.5) * 5;
-            camera.position.z = Math.cos(time) * 15 + 25;
-            camera.lookAt(scene.position);
+        const mesh = new THREE.Mesh(geometry, material);
+        scene.add(mesh);
 
-            // حساب الـ FPS
-            frames++;
-            if (performance.now() >= lastTime + 1000) {
-                fpsElement.textContent = Math.round((frames * 1000) / (performance.now() - lastTime));
-                frames = 0;
-                lastTime = performance.now();
-            }
-
-            // تصيير عادي بدون أي Post-Processing
+        function animate(time) {
+            material.uniforms.iTime.value = time * 0.001;
             renderer.render(scene, camera);
+            requestAnimationFrame(animate);
         }
-
-        function onWindowResize() {
-            if (isStopped || !camera) return;
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        }
-
-        // الإيقاف الطارئ والإنقاذ
-        function stopTest() {
-            isStopped = true;
-
-            if (animationId) {
-                cancelAnimationFrame(animationId);
-            }
-
-            // التخلص من المجسمات
-            for (let i = objects.length - 1; i >= 0; i--) {
-                const obj = objects[i];
-                scene.remove(obj);
-            }
-
-            geometries.forEach(geo => geo.dispose());
-
-            if (renderer) {
-                renderer.dispose();
-                renderer.forceContextLoss(); // تفريغ الذاكرة فوراً
-                const container = document.getElementById('canvas-container');
-                if (container.contains(renderer.domElement)) {
-                    container.removeChild(renderer.domElement);
-                }
-            }
-
-            document.getElementById('canvas-container').style.display = 'none';
-            document.getElementById('metrics-panel').style.display = 'none';
-            document.getElementById('stop-btn').style.display = 'none';
-
-            document.getElementById('end-screen').style.display = 'flex';
-        }
-    </script>
+        requestAnimationFrame(animate);
+    }
+</script>
 </body>
 </html>
