@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>انا كيوت ادخلني UwU</title>
     <style>
         /* التنسيقات العامة */
@@ -24,7 +23,6 @@
             width: 100vw;
             height: 100vh;
             background: linear-gradient(135deg, #fff0f5 0%, #ffe4e1 100%);
-            /* وردي وأبيض كريمي */
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -69,7 +67,7 @@
             transform: scale(0.95);
         }
 
-        /* ---------------- المرحلة 2: الجحيم المرعب ---------------- */
+        /* ---------------- المرحلة 2: الجحيم المرعب (متوافق مع iOS) ---------------- */
         #canvas-container {
             display: none;
             width: 100vw;
@@ -93,7 +91,7 @@
             z-index: 10;
             pointer-events: none;
             box-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
-            min-width: 200px;
+            min-width: 150px;
             text-align: left;
             direction: ltr;
         }
@@ -120,23 +118,9 @@
 
         /* زر الإيقاف الثابت - أعلى اليمين (نابض ومرعب) */
         @keyframes throb {
-            0% {
-                transform: scale(1);
-                box-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
-                background-color: #880000;
-            }
-
-            50% {
-                transform: scale(1.15);
-                box-shadow: 0 0 50px rgba(255, 0, 0, 1);
-                background-color: #ff0000;
-            }
-
-            100% {
-                transform: scale(1);
-                box-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
-                background-color: #880000;
-            }
+            0% { transform: scale(1); box-shadow: 0 0 15px rgba(255, 0, 0, 0.8); background-color: #880000; }
+            50% { transform: scale(1.15); box-shadow: 0 0 50px rgba(255, 0, 0, 1); background-color: #ff0000; }
+            100% { transform: scale(1); box-shadow: 0 0 15px rgba(255, 0, 0, 0.8); background-color: #880000; }
         }
 
         #stop-btn {
@@ -187,70 +171,10 @@
     <script type="importmap">
         {
             "imports": {
-                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
             }
         }
     </script>
-
-    <!-- Shader لتشويه الرؤوس (Vertex Shader) -->
-    <script type="x-shader/x-vertex" id="vertexShader">
-        varying vec2 vUv;
-        varying vec3 vPosition;
-        uniform float time;
-
-        void main() {
-            vUv = uv;
-            vPosition = position;
-            
-            // تشويه عنيف للرؤوس لإنشاء خلل بصري (Glitch)
-            vec3 pos = position;
-            pos.x += sin(time * 15.0 + position.y * 10.0) * 0.8;
-            pos.y += cos(time * 20.0 + position.z * 10.0) * 0.8;
-            pos.z += sin(time * 25.0 + position.x * 10.0) * 0.8;
-            
-            gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
-        }
-    </script>
-
-    <!-- Shader مجنون وحساباته معقدة جداً (Fragment Shader) - خوارزمية فراكتال ثقيلة -->
-    <script type="x-shader/x-fragment" id="fragmentShader">
-        uniform float time;
-        varying vec2 vUv;
-        varying vec3 vPosition;
-
-        // دالة الفراكتال المرعبة الثقيلة جداً لاستهلاك موارد بطاقة الرسوميات (GPU)
-        float scaryFractal(vec3 p) {
-            float d = 0.0;
-            for(int i = 0; i < 10; i++) { // حلقة تكرار مكثفة
-                p = abs(p) / dot(p, p) - vec3(0.5, 0.9, 0.4);
-                d += length(p);
-            }
-            return d;
-        }
-
-        void main() {
-            vec3 p = vPosition * 2.5 + vec3(time * 0.5);
-            float f = scaryFractal(p);
-            
-            // لوحة ألوان الرعب (أحمر دموي، أسود، وأرجواني عميق)
-            vec3 col = vec3(f * 0.04, f * 0.005, f * 0.015);
-            
-            // نبضات دموية مزعجة
-            col += vec3(0.6, 0.0, 0.1) * sin(f * 15.0 - time * 10.0);
-            
-            // خلل بصري عنيف يعتمد على التردد العالي
-            float glitch = step(0.95, fract(sin(dot(vUv.xy, vec2(12.9898, 78.233))) * 43758.5453 + time * 5.0));
-            if (glitch > 0.5) {
-                col.r += 1.5; // توهج أحمر حاد
-                col.g *= 0.1;
-                col.b += 0.3;
-            }
-            
-            gl_FragColor = vec4(col, 1.0);
-        }
-    </script>
-
 </head>
 
 <body>
@@ -266,41 +190,30 @@
     <div id="canvas-container"></div>
     <div id="metrics-panel">
         <div class="metric-title">FPS</div>
-        <div class="metric-value" id="fps-val">60</div> <!-- 60 قبل بدء الكارثة -->
-
-        <div class="metric-title">Objects Rendered</div>
+        <div class="metric-value" id="fps-val">60</div>
+        <div class="metric-title">Objects</div>
         <div class="metric-value" id="objects-val">0</div>
-
-        <div class="metric-title">Resolution (Px Ratio x8)</div>
-        <div class="metric-value" id="res-val">0 x 0</div>
     </div>
     <button id="stop-btn">STOP TEST</button>
 
     <div id="end-screen">
         <h1>تم إنقاذ الجهاز بنجاح!</h1>
-        <p>تم تدمير الواجهة المرعبة وتحرير الذاكرة وتفريغ سياق WebGL بالكامل.</p>
+        <p>تم تحرير الذاكرة وتفريغ سياق WebGL بالكامل.</p>
     </div>
 
     <script type="module">
         import * as THREE from 'three';
-        import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
-        import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
-        import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
-        import { SSAOPass } from 'three/addons/postprocessing/SSAOPass.js';
-        import { SMAAPass } from 'three/addons/postprocessing/SMAAPass.js';
 
         // المتغيرات
-        let scene, camera, renderer, composer;
+        let scene, camera, renderer;
         let animationId;
         const objects = [];
-        let scaryMaterial; // لحفظ الـ ShaderMaterial لتحديث الوقت
         const geometries = [];
 
         let lastTime = performance.now();
         let frames = 0;
         const fpsElement = document.getElementById('fps-val');
         const objectsElement = document.getElementById('objects-val');
-        const resElement = document.getElementById('res-val');
 
         let isStopped = false;
 
@@ -308,114 +221,70 @@
         document.getElementById('stop-btn').addEventListener('click', stopTest);
 
         function triggerHorrorPhase() {
-            // تدمير الواجهة اللطيفة تماماً
+            // تدمير الواجهة اللطيفة
             document.getElementById('phase1').style.display = 'none';
             document.body.style.backgroundColor = '#000';
 
-            // إظهار الجحيم
+            // إظهار واجهات الإجهاد
             document.getElementById('canvas-container').style.display = 'block';
             document.getElementById('metrics-panel').style.display = 'block';
             document.getElementById('stop-btn').style.display = 'block';
 
-            // بدء الإجهاد المدمر
-            initDevastatingWebGL();
+            // بدء التهيئة المتوافقة مع iOS
+            initSurvivableWebGL();
         }
 
-        // تهيئة المشهد القاتل
-        function initDevastatingWebGL() {
+        function initSurvivableWebGL() {
             const container = document.getElementById('canvas-container');
 
             scene = new THREE.Scene();
-            scene.fog = new THREE.FogExp2(0x050000, 0.03); // ضباب أسود ودموي
+            scene.fog = new THREE.FogExp2(0x0a0000, 0.05); // ضباب مرعب خفيف
 
             camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.z = 50;
+            camera.position.z = 30;
 
-            // إعدادات الـ Renderer لزيادة الضغط
-            renderer = new THREE.WebGLRenderer({ antialias: false, powerPreference: "high-performance" });
-
-            // مضاعفة البكسلات بشكل متوازن لتجنب انهيار المتصفح (Crash)
-            const extremePixelRatio = window.devicePixelRatio * 2.5;
-            renderer.setPixelRatio(extremePixelRatio);
+            // استخدام إعدادات عادية لمنع iOS من إغلاق التبويبة
+            renderer = new THREE.WebGLRenderer({ antialias: false, powerPreference: "default" });
+            
+            // قيد حاسم جداً لـ iOS: دقة شاشة أساسية بدون مضاعفات لتجنب الانهيار (Crash)
+            renderer.setPixelRatio(1);
             renderer.setSize(window.innerWidth, window.innerHeight);
             container.appendChild(renderer.domElement);
 
-            resElement.textContent = `${Math.floor(window.innerWidth * extremePixelRatio)} x ${Math.floor(window.innerHeight * extremePixelRatio)}`;
-
-            // إعدادات المعالجة اللاحقة (Post-Processing) الكثيفة
-            composer = new EffectComposer(renderer);
-            composer.addPass(new RenderPass(scene, camera));
-
-            // SSAO يضاعف من استهلاك أداء الظلال المحيطية
-            const ssaoPass = new SSAOPass(scene, camera, window.innerWidth, window.innerHeight);
-            ssaoPass.kernelRadius = 32; // تأثير ضخم
-            ssaoPass.minDistance = 0.001;
-            ssaoPass.maxDistance = 0.2;
-            composer.addPass(ssaoPass);
-
-            // توهج مرعب للألوان الحمراء والبنفسجية (Bloom)
-            const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 3.5, 0.8, 0.0);
-            composer.addPass(bloomPass);
-
-            // إضافة SMAA للضغط على الـ GPU أكثر بطريقة مستقرة
-            const smaaPass = new SMAAPass(window.innerWidth * extremePixelRatio, window.innerHeight * extremePixelRatio);
-            composer.addPass(smaaPass);
-
-            // إضاءات لزيادة الضغط
-            createTerrifyingLights();
-
-            // بناء الكارثة
-            createNightmareGeometry();
-        }
-
-        function createTerrifyingLights() {
-            scene.add(new THREE.AmbientLight(0x110000));
-            for (let i = 0; i < 20; i++) {
-                const color = Math.random() > 0.5 ? 0xff0000 : 0x550000;
-                const light = new THREE.PointLight(color, 2, 100);
-                light.position.set(
-                    (Math.random() - 0.5) * 100,
-                    (Math.random() - 0.5) * 100,
-                    (Math.random() - 0.5) * 100
-                );
-                light.castShadow = true;
-                light.shadow.mapSize.width = 1024;
-                light.shadow.mapSize.height = 1024;
-                scene.add(light);
-            }
+            // إنشاء الأجسام المشوهة
+            createCreepyGeometries();
 
             window.addEventListener('resize', onWindowResize);
             animate();
         }
 
-        // إنشاء المادة القاتلة والمجسمات العشوائية
-        function createNightmareGeometry() {
-            const numObjects = 4000; // تقليل العدد لمنع استنفاد الذاكرة (OOM)
-            objectsElement.textContent = numObjects.toLocaleString();
+        // إنشاء المجسمات المرعبة بعدد قليل جداً لتجنب استنفاد الذاكرة
+        function createCreepyGeometries() {
+            const numObjects = 80; // عدد قليل كافٍ جداً
+            objectsElement.textContent = numObjects;
 
-            const baseGeometry = new THREE.IcosahedronGeometry(1.5, 2);
-            geometries.push(baseGeometry);
+            // استخدام مواد أساسية رخيصة حسابياً ولكنها تبدو مزعجة
+            const matRed = new THREE.MeshBasicMaterial({ color: 0xaa0000 });
+            const matWire = new THREE.MeshBasicMaterial({ color: 0x000000, wireframe: true, wireframeLinewidth: 2 });
 
-            // إنشاء ShaderMaterial المكلفة جداً
-            scaryMaterial = new THREE.ShaderMaterial({
-                vertexShader: document.getElementById('vertexShader').textContent,
-                fragmentShader: document.getElementById('fragmentShader').textContent,
-                uniforms: {
-                    time: { value: 0.0 }
-                },
-                wireframe: false,
-                side: THREE.DoubleSide // تزيد التكلفة لأنها ترسم الجهتين
-            });
-
-            // إضافة عشرات الآلاف من المجسمات
             for (let i = 0; i < numObjects; i++) {
-                const mesh = new THREE.Mesh(baseGeometry, scaryMaterial);
+                // إنشاء هندسة مستقلة لكل جسم لتشويهها من المعالج المركزي (CPU)
+                const geo = new THREE.IcosahedronGeometry(2, 0); // تفاصيل منخفضة جداً
+                
+                // حفظ المواضع الأصلية للرؤوس للرجوع إليها عند التشويه
+                const posAttr = geo.attributes.position;
+                const origPositions = new Float32Array(posAttr.array);
+                geo.userData = { origPositions: origPositions };
+                
+                geometries.push(geo);
 
-                // توزيع عشوائي متداخل جداً
+                const mesh = new THREE.Mesh(geo, Math.random() > 0.5 ? matRed : matWire);
+                
+                // توزيع عشوائي
                 mesh.position.set(
-                    (Math.random() - 0.5) * 150,
-                    (Math.random() - 0.5) * 150,
-                    (Math.random() - 0.5) * 150
+                    (Math.random() - 0.5) * 50,
+                    (Math.random() - 0.5) * 50,
+                    (Math.random() - 0.5) * 20
                 );
 
                 mesh.rotation.set(
@@ -424,37 +293,12 @@
                     Math.random() * Math.PI
                 );
 
-                const scale = Math.random() * 2.0 + 0.5;
+                const scale = Math.random() * 2 + 1;
                 mesh.scale.set(scale, scale, scale);
-
-                mesh.castShadow = true;
-                mesh.receiveShadow = true;
-
-                mesh.userData = {
-                    rx: (Math.random() - 0.5) * 0.05,
-                    ry: (Math.random() - 0.5) * 0.05
-                };
 
                 scene.add(mesh);
                 objects.push(mesh);
             }
-        }
-
-        // عملية حسابية معقدة لخنق الـ CPU بشكل مدروس لمنع تفعيل (Watchdog) وإسقاط الإطارات لمنزلة الآحاد
-        function brutalCPUChoking() {
-            let garbageValue = 0;
-            // حلقة مضبوطة لحساب الأعداد الأولية (1500 عدد تكفي لـ 1-5 إطارات)
-            for (let i = 2; i < 1500; i++) {
-                let isPrime = true;
-                for (let j = 2; j <= Math.sqrt(i); j++) {
-                    if (i % j === 0) {
-                        isPrime = false;
-                        break;
-                    }
-                }
-                if (isPrime) garbageValue += i;
-            }
-            return garbageValue; // لمنع المترجم من تجاهل الدالة
         }
 
         // حلقة الجحيم
@@ -463,39 +307,62 @@
 
             animationId = requestAnimationFrame(animate);
 
-            // 1. خنق المعالج (CPU Lag Spike)
-            brutalCPUChoking();
+            // ---------------------------------------------------------
+            // خنق المعالج المعتمد على الوقت (Time-Based Throttling)
+            // هذه هي الاستراتيجية الناجحة لنظام iOS لضمان بطء الشاشة
+            // مع منع المتصفح من الاعتقاد بأن الصفحة قد تجمدت تماماً
+            // ---------------------------------------------------------
+            const frameStart = performance.now();
+            let garbageVal = 0;
+            // احتجاز المعالج لمدة 150 ملي ثانية في كل إطار (سيؤدي ذلك لتثبيت الإطارات بين 3 إلى 6 FPS)
+            while (performance.now() - frameStart < 150) {
+                garbageVal += Math.random(); // عملية حسابية خفيفة فقط لإشغال المعالج
+            }
 
             const time = performance.now() * 0.001;
 
-            // تحديث وقت الـ Shader ليتحرك الفراكتال
-            if (scaryMaterial) {
-                scaryMaterial.uniforms.time.value = time;
-            }
-
-            // تحريك المجسمات لزيادة تحديثات المصفوفات
+            // تشويه رؤوس المجسمات في كل إطار (Glitchy Spikes effect)
             for (let i = 0; i < objects.length; i++) {
                 const obj = objects[i];
-                obj.rotation.x += obj.userData.rx;
-                obj.rotation.y += obj.userData.ry;
+                obj.rotation.x += 0.05;
+                obj.rotation.y += 0.05;
+
+                const geo = obj.geometry;
+                const posAttr = geo.attributes.position;
+                const orig = geo.userData.origPositions;
+
+                // تحريك عشوائي حاد لكل رأس في المجسم
+                for (let j = 0; j < posAttr.count; j++) {
+                    const twitchX = (Math.random() - 0.5) * 1.8;
+                    const twitchY = (Math.random() - 0.5) * 1.8;
+                    const twitchZ = (Math.random() - 0.5) * 1.8;
+                    
+                    posAttr.setXYZ(
+                        j,
+                        orig[j * 3] + twitchX,
+                        orig[j * 3 + 1] + twitchY,
+                        orig[j * 3 + 2] + twitchZ
+                    );
+                }
+                posAttr.needsUpdate = true; // إخبار Three.js بتحديث الرؤوس في الـ GPU
             }
 
-            // كاميرا تهتز بخفة لمحاكاة الرعب
-            camera.position.x = Math.sin(time * 0.5) * 60 + (Math.random() - 0.5) * 2;
-            camera.position.y = Math.cos(time * 0.3) * 30 + (Math.random() - 0.5) * 2;
-            camera.position.z = Math.cos(time * 0.5) * 60 + (Math.random() - 0.5) * 2;
+            // حركة كاميرا غير مريحة
+            camera.position.x = Math.sin(time) * 15;
+            camera.position.y = Math.cos(time * 0.5) * 5;
+            camera.position.z = Math.cos(time) * 15 + 25;
             camera.lookAt(scene.position);
 
-            // تحديث مقياس FPS ليرى المستخدم الهبوط الحاد
+            // حساب الـ FPS
             frames++;
-            if (time * 1000 >= lastTime + 1000) {
-                fpsElement.textContent = Math.round((frames * 1000) / (time * 1000 - lastTime));
+            if (performance.now() >= lastTime + 1000) {
+                fpsElement.textContent = Math.round((frames * 1000) / (performance.now() - lastTime));
                 frames = 0;
-                lastTime = time * 1000;
+                lastTime = performance.now();
             }
 
-            // التصيير مع ضغط الـ Shader والـ Post-Processing والـ Pixel Ratio
-            composer.render();
+            // تصيير عادي بدون أي Post-Processing
+            renderer.render(scene, camera);
         }
 
         function onWindowResize() {
@@ -503,45 +370,33 @@
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
-            composer.setSize(window.innerWidth, window.innerHeight);
-
-            const extremePixelRatio = window.devicePixelRatio * 2.5;
-            resElement.textContent = `${Math.floor(window.innerWidth * extremePixelRatio)} x ${Math.floor(window.innerHeight * extremePixelRatio)}`;
         }
 
-        // الإيقاف الطارئ والإنقاذ (Rescue Function)
+        // الإيقاف الطارئ والإنقاذ
         function stopTest() {
             isStopped = true;
 
-            // إيقاف الحلقة فوراً
             if (animationId) {
                 cancelAnimationFrame(animationId);
             }
 
-            // إزالة الكائنات والتخلص من المواد، الشيدرات، والهندسات
+            // التخلص من المجسمات
             for (let i = objects.length - 1; i >= 0; i--) {
                 const obj = objects[i];
                 scene.remove(obj);
             }
 
             geometries.forEach(geo => geo.dispose());
-            if (scaryMaterial) scaryMaterial.dispose();
 
-            // تدمير سياق WebGL بالكامل لإنقاذ الذاكرة
             if (renderer) {
                 renderer.dispose();
-                renderer.forceContextLoss(); // إجبار التخلص من سياق الرسوميات
+                renderer.forceContextLoss(); // تفريغ الذاكرة فوراً
                 const container = document.getElementById('canvas-container');
                 if (container.contains(renderer.domElement)) {
                     container.removeChild(renderer.domElement);
                 }
             }
 
-            if (composer) {
-                composer.dispose();
-            }
-
-            // إخفاء الأدوات وإظهار شاشة الإنقاذ
             document.getElementById('canvas-container').style.display = 'none';
             document.getElementById('metrics-panel').style.display = 'none';
             document.getElementById('stop-btn').style.display = 'none';
@@ -550,5 +405,4 @@
         }
     </script>
 </body>
-
 </html>
